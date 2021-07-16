@@ -12,17 +12,21 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import * as Speech from "expo-speech";
 
-export default function Bike(props) {
+export default function Bike({ route }) {
   const [speak, setSpeak] = useState(false);
   const [played, setPlayed] = useState(false);
-  const description = `Pierre Michaux, his son Ernest and business partners, in Paris, were the first commercial makers of pedal bicycles, in the mid to late 1860s. At the time the vehicles were called velocipedes. Competitors began to build velocipedes as well, and this example could be by one of them. 
-
-Cranks and pedals are on the front wheel, a direct-drive system. One turn of the pedals takes you the circumference of the wheel. This velocipede's 36-inch drive wheel provides a very low gear compared to bicycles of today. Cradles above the front wheel (forward of the head tube) allowed riders to rest their legs when coasting down hills. A handlebar-operated rear brake provided some (marginal) sense of safety.
-
-The Calcium King acetylene lantern displayed on the velocipede is from a different period - the 1890s.`;
-
+  const { image, title, subtitle, description } = route.params;
   const play = async () => {
     setSpeak(!speak);
+    const speaking = await Speech.isSpeakingAsync();
+    if (!speaking) {
+      Speech.speak(description, {
+        onDone: () => {
+          setSpeak(false);
+          setPlayed(false);
+        },
+      });
+    }
     if (speak && !played) {
       Speech.speak(description, {
         onDone: () => {
@@ -43,9 +47,9 @@ The Calcium King acetylene lantern displayed on the velocipede is from a differe
 
   return (
     <ScrollView style={styles.container}>
-      <Image source={require("../assets/bike.jpg")} style={styles.bike} />
-      <Text style={styles.title}>1868 Velocipede</Text>
-      <Text style={styles.subtitle}>Object/Artifact</Text>
+      <Image source={image} style={styles.bike} />
+      <Text style={styles.title}>{title}</Text>
+      <Text style={styles.subtitle}>{subtitle}</Text>
       <View style={styles.audioContainer}>
         <Image source={require("../assets/playBack.png")} />
         <View style={styles.controlsContainer}>
@@ -74,7 +78,7 @@ The Calcium King acetylene lantern displayed on the velocipede is from a differe
       </View>
       <Text style={styles.subheading}>Description</Text>
       <Text style={styles.description}>{description}</Text>
-      <View style={{ height: 50 }}></View>
+      <View style={{ height: 70 }}></View>
     </ScrollView>
   );
 }

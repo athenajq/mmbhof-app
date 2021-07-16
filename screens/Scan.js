@@ -16,12 +16,21 @@ export default function Scan(props) {
     })();
   }, []);
 
-  const handleBarCodeScanned = ({ type, data, bounds, cornerPoints }) => {
+  const handleBarCodeScanned = ({ bounds }) => {
     setScanned(true);
     setBounds(bounds);
     setTimeout(() => {
       setScanned(false);
-      props.navigation.navigate("Bike");
+      props.navigation.navigate("Bike", {
+        image: require("../assets/bike.jpg"),
+        title: "1868 Velocipede",
+        subtitle: "Object/Artifact",
+        description: `Pierre Michaux, his son Ernest and business partners, in Paris, were the first commercial makers of pedal bicycles, in the mid to late 1860s. At the time the vehicles were called velocipedes. Competitors began to build velocipedes as well, and this example could be by one of them. 
+
+Cranks and pedals are on the front wheel, a direct-drive system. One turn of the pedals takes you the circumference of the wheel. This velocipede's 36-inch drive wheel provides a very low gear compared to bicycles of today. Cradles above the front wheel (forward of the head tube) allowed riders to rest their legs when coasting down hills. A handlebar-operated rear brake provided some (marginal) sense of safety.
+        
+The Calcium King acetylene lantern displayed on the velocipede is from a different period - the 1890s.`,
+      });
     }, 1500);
   };
 
