@@ -4,8 +4,6 @@ import { BarCodeScanner } from "expo-barcode-scanner";
 import { Ionicons } from "@expo/vector-icons";
 import bike_info from "../bike_info.json";
 
-// First image url from json file
-let image_url = { uri: bike_info[0].image };
 
 export default function Scan(props) {
   const [hasPermission, setHasPermission] = useState(null);
@@ -20,16 +18,16 @@ export default function Scan(props) {
     })();
   }, []);
 
-  const handleBarCodeScanned = ({ bounds }) => {
+  const handleBarCodeScanned = ({ bounds, data }) => {
     setScanned(true);
     setBounds(bounds);
     setTimeout(() => {
       setScanned(false);
       props.navigation.navigate("Bike", {
-        image: image_url,
-        title: bike_info[0].title,
-        subtitle: "Object/Artifact",
-        description: bike_info[0].description,
+        image: { uri: bike_info[data].image },
+        title: bike_info[data].title,
+        subtitle: bike_info[data].type,
+        description: bike_info[data].description,
       });
     }, 1500);
   };
